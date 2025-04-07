@@ -48,7 +48,7 @@ app.get('/protected-route', authenticateToken, (req, res) => {
 
 // Use cors middleware
 app.use(cors({
-  origin: ['https://backend-9smvdqpdl-naziya-shaikhs-projects.vercel.app', 'http://localhost:3004'], // Allow requests from these origins
+  origin: ['https://backend-33ybmcleb-naziya-shaikhs-projects.vercel.app', 'http://localhost:3004'], // Allow requests from these origins
   methods: ['GET', 'POST'], // Specify allowed methods
   credentials: true // Allow credentials if needed
 }));
