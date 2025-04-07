@@ -6,8 +6,6 @@ const FileUpload = () => {
   const [data, setData] = useState({ field1: '', field2: '' });
   const [aggregatedData, setAggregatedData] = useState([]);
 
-  const apiUrl = "https://backend-64j9xx77u-naziya-shaikhs-projects.vercel.app/"; // Directly use the backend URL
-
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
@@ -15,16 +13,16 @@ const FileUpload = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${apiUrl}/data`, data); // Use apiUrl here
+      await axios.post('http://localhost:5000/data', data);
       fetchAggregatedData(); // Fetch aggregated data after submitting
     } catch (error) {
       console.error('Error submitting data:', error);
     }
   };
-  
+
   const fetchAggregatedData = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/aggregate`); // Use apiUrl here
+      const response = await axios.get('http://localhost:5000/aggregate');
       setAggregatedData(response.data);
     } catch (error) {
       console.error('Error fetching aggregated data:', error);
