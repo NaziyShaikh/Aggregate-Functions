@@ -3,12 +3,52 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
+// Use CORS middleware
+app.use(cors({
+  origin: 'http://localhost:3004' // Allow requests from this origin
+}));
+
+
+const jwtSecret = process.env.JWT_SECRET; // Access the JWT secret from environment variables
+
+// Middleware to authenticate JWT
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1]; // Get token from header
+  if (!token) return res.sendStatus(401); // Unauthorized
+
+  jwt.verify(token, jwtSecret, (err, user) => {
+    if (err) return res.sendStatus(403); // Forbidden
+    req.user = user; // Attach user to request
+    next(); // Proceed to the next middleware or route handler
+  });
+};
+
+// Login route
+app.post('/login', async (req, res) => {
+  // Assume user authentication is successful
+  const user = { id: 'user_id', username: 'username' }; // Replace with actual user data
+
+  // Sign the JWT
+  const token = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+
+  // Send the token in the response
+  res.json({ token });
+});
+
+// Example of a protected route
+app.get('/protected-route', authenticateToken, (req, res) => {
+  res.json({ message: 'This is a protected route!', user: req.user });
+});
+
+
+
 // Use cors middleware
 app.use(cors({
-  origin: ['https://backend-9smvdqpdl-naziya-shaikhs-projects.vercel.app'], // Allow requests from these origins
+  origin: ['https://backend-9smvdqpdl-naziya-shaikhs-projects.vercel.app', 'http://localhost:3004'], // Allow requests from these origins
   methods: ['GET', 'POST'], // Specify allowed methods
   credentials: true // Allow credentials if needed
 }));
@@ -49,6 +89,8 @@ app.get('/aggregate', async (req, res) => {
   ]);
   res.status(200).send(result);
 });
+
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
