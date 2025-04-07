@@ -12,8 +12,12 @@ const FileUpload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate field1 and field2 here...
+
     try {
-      await axios.post('http://localhost:5000/data', data);
+      const apiUrl = process.env.REACT_APP_API_URL;
+      await axios.post(`${apiUrl}/data`, data); // Use the API URL
       fetchAggregatedData(); // Fetch aggregated data after submitting
     } catch (error) {
       console.error('Error submitting data:', error);
@@ -22,7 +26,8 @@ const FileUpload = () => {
 
   const fetchAggregatedData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/aggregate');
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const response = await axios.get(`${apiUrl}/aggregate`); // Use the API URL
       setAggregatedData(response.data);
     } catch (error) {
       console.error('Error fetching aggregated data:', error);
